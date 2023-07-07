@@ -1,0 +1,14 @@
+# Anova 
+
+install.packages(c("ggplot2", "ggpubr", "tidyverse", "broom", "AICcmodavg"))
+library(ggplot2)
+library(ggpubr)
+library(tidyverse)
+library(broom)
+library(AICcmodavg)
+summary(datS)
+
+install.packages("sessioninfo")
+library(sessioninfo)
+sessioninfo::external_info()
+sessioninfo::platform_info()
