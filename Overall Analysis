@@ -1,0 +1,129 @@
+#Set Working Directory
+setwd("/Users/stacia/Desktop/R")
+
+#Call in file being used for figures
+datS <- read.csv("Copy of Copy of Averages-No Outlier - Sheet1.csv",strip.white = TRUE)
+
+#Call in dataset by name
+head(datS)
+ datS
+ #Install packages needed to make figure 
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("devtools")
+library(devtools)
+install_github("johannesbjork/LaCroixColoR")
+library(LaCroixColoR)
+
+#Use this if a different color pallette is wanted
+install.packages("devtools")
+devtools::install_github("kevinsblake/NatParksPalettes")
+force=TRUE
+
+#Reinstall rlang if needed to be updated to support ggplot
+install.packages("rlang", dependencies = TRUE)
+file.edit(file.path("~", ".Rprofile"))
+install.packages("rlang")
+
+#Set data factors
+datS$sAverage_Size<-factor(datS$Average_Size)
+datS$species<-factor(datS$Species)
+
+#Average MMC Size vs Species boxplot without jitter
+MMCsizevs.Species <-ggplot(datS, aes(x=Species, y=Average_Size)) + geom_boxplot(outlier.shape =NA, aes(fill=species))
+MMCsizevs.Species
+
+#Average Size vs. Species boxplot sort by sex, normal jitter
+MMCSIZEvs.SEX<-ggplot(datS, aes(x=Species, y=Average_Size)) + geom_boxplot(outlier.shape = NA, aes(fill=Sex))+geom_jitter(color="black", position=position_jitter(0.2))+labs(fill="Sex",y="Average MMC Size (μm)", x="Species")
+MMCSIZEvs.SEX
+
+#Average size vs. Species grouped by sex, updated with jitter dodge
+MMCSIZEVSEX<-ggplot(datS, aes(x=Species,y=Average_Size, color=Sex)) +geom_boxplot(outlier.shape=NA)+geom_point(position=position_jitterdodge(0.2))+labs(fill="Sex",y="Average MMC Size (μm)", x="Species")
+MMCSIZEVSEX
+
+#Spots per Area vs. Species groupded by sex, updated jitter
+SpotsArea.Sex<-ggplot(datS, aes(x=Species,y=Average_Spots_Per_Area, color=Sex)) +geom_boxplot(outlier.shape=NA)+geom_point(position=position_jitterdodge(0.2))+labs(fill="Sex",y="Average Spots Per Area", x="Species")
+SpotsArea.Sex
+
+#Trendline Length vs MMC Size with species as factor
+Trend2 <- ggplot(datS, aes(x=Length,y=Average_Size, color=factor(Species))) + geom_jitter(size=3) + geom_smooth(method=lm, se=FALSE, fullrange=TRUE) + labs(title="Length vs. Average MMC Size", color="Species") + scale_y_continuous(name="MMC Size (μm)", limits=c(0.0001, 0.001)) + scale_x_continuous(name="Length (mm)")
+Trend2
+
+#Trendline Length vs. MMC Size updated scale
+Trend1 <- ggplot(datS, aes(x=Length,y=Average_Size, color=factor(Species))) + geom_jitter(size=3) + geom_smooth(method=lm, se=FALSE, fullrange=TRUE) + labs(title="Length vs. MMC Size", color="Species") + scale_y_continuous(name="MMC Size (μm)", limits=c(10, 100)) + scale_x_continuous(name="Length (mm)")
+Trend1
+
+
+t.test(MMCSIZEvs.SEX)
+
+#Calling in packages for t-test
+library(tidyverse)
+
+#Functions to set rho for t-test
+rbvn_t<-function (n=20, mu1=1, s1=4, mu2=1, s2=4, rho=0)
+  n = 13
+n=20
+mu1=1
+s1=4
+s2=4
+mu2=1
+rho=0
+X<- rnorm(n, mu1, s1)
+Y <- rnorm(x, mu2 + (s2/s1) * rho *
+             (X - mu1), sqrt((1 - rho^2)*s2^2))
+x<-"Average_Size"
+t.test(X,Y, mu=0, alternative = "two.sided", var.equal = TRUE)  
+
+
+#T-test Trial (not all data included)
+
+install.packages("outliers")
+library(outliers)
+aes(x=Average_Size, y=Species)
+
+x=Average_Size
+grubbs.test(aes(x=Average_Size, y=Species), type = 10, opposite = FALSE, two.sided = FALSE)
+
+
+Average_Size
+
+library(outliers)
+test <- grubbs.test(datS)
+x <- "Average_Size"
+datS
+grubbs.test(data, type = 10, opposite = FALSE, two.sided = FALSE)
+data<-c(31.546,58.73,65.039,46.197,23.987,21.239,28.331,33.742,59.183,78.054,23.494,39.593,68.094,54.585,14.897,13.678,24.746,11.547,9.011,9.71,8.085,5.445,11.799)
+grubbs.test(data)
+
+
+res_aov <- aov(data ~ Species,data = datS)
+res_aov <- aov(data ~ Species,
+               data = datS)
+
+summary(res_aov)
+install("report")
+library("report")
+report(res_aov)
+            
+anova(data)
+
+devtools::install_github("cardiomoon/webr")
+
+require(moonBook)
+require(webr)
+
+
+# Anova 
+
+install.packages(c("ggplot2", "ggpubr", "tidyverse", "broom", "AICcmodavg"))
+library(ggplot2)
+library(ggpubr)
+library(tidyverse)
+library(broom)
+library(AICcmodavg)
+summary(datS)
+
+install.packages("sessioninfo")
+library(sessioninfo)
+sessioninfo::external_info()
+sessioninfo::platform_info()
